@@ -1568,8 +1568,15 @@ declare namespace ns1='http://soap.upskills.in/soap/default?services=customerCus
          <customerId>7419</customerId>
       </def:customerCustomerRepositoryV1DeleteByIdRequest>
    </soap:Body>
-</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" id="59221a5b-890d-4271-b446-35c1c50670a7"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:testSuite id="2954a00b-c325-4b89-a3c6-b50797a103dc" name="Test Create Customer"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="fae625cf-96ae-4e70-8eca-8afb5be1c6f3" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="TestCase Create Customer" searchProperties="true"><con:settings/><con:testStep type="groovy" name="Groovy Script" id="d462b178-1741-415d-92de-6e4779fb5df0"><con:settings/><con:config><script>import com.eviware.soapui.support.XmlHolder
-
+</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" id="59221a5b-890d-4271-b446-35c1c50670a7"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Check Customer By Id" id="3bbb6b13-d482-48d0-bec0-10554407c64b"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>customerCustomerRepositoryV1Binding</con:interface><con:operation>customerCustomerRepositoryV1GetById</con:operation><con:request name="Check Customer By Id" id="735bb6ba-8a6b-434f-91e6-04e8396da133"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="Authorization" value="bearer f0rf13pxtxp7mftwc23rq6e52yvmi5um" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://soap.upskills.in/soap/default?services=customerCustomerRepositoryV1</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:def="http://soap.upskills.in/soap/default?services=customerCustomerRepositoryV1">
+   <soap:Header/>
+   <soap:Body>
+      <def:customerCustomerRepositoryV1GetByIdRequest>
+         <customerId>7419</customerId>
+      </def:customerCustomerRepositoryV1GetByIdRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" id="73d292fc-2358-4139-997b-78fc1bed5757"/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:testSuite id="2954a00b-c325-4b89-a3c6-b50797a103dc" name="Test Create Customer"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="fae625cf-96ae-4e70-8eca-8afb5be1c6f3" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="TestCase Create Customer" searchProperties="true"><con:settings/><con:testStep type="groovy" name="Groovy Script" id="d462b178-1741-415d-92de-6e4779fb5df0"><con:settings/><con:config><script>import com.eviware.soapui.support.XmlHolder
+//i am creating a random email id
 Random rnd = new Random()
 def emailrandom="rajdeep"+rnd.next(200)+"@gmail.com"
 log.info emailrandom
@@ -1585,12 +1592,14 @@ log.info "The Customer Id Is:$idvalueCreateCustomer"
 def tstepCustomerById =tc.testSteps['Get Customer By Id'].getPropertyValue('response')
 def holderCustomerById= new XmlHolder(tstepCustomerById)
 def idvalueCustomerById = holderCustomerById.getNodeValue("//*:id")
-if(idvalueCreateCustomer==idvalueCustomerById){
-log.info "The Customer Has Been Added And The Customer Id Is:$idvalueCreateCustomer"
-}
+//if(idvalueCreateCustomer==idvalueCustomerById){
+//log.info "The Customer Has Been Added And The Customer Id Is:$idvalueCreateCustomer"
+//}
+assert idvalueCreateCustomer==idvalueCustomerById
 
 def tstepAllCustomer =tc.testSteps['Get All Customer'].getPropertyValue('response')
 def holderAllCustomer= new XmlHolder(tstepAllCustomer)
+//the service provides response of list of customers and i am trying to count the list of customers
 def nodeCount=holderAllCustomer.getNodeValue("count(//result/items/item/id)")
 log.info "The Total Customers Added Are"+ nodeCount
 
@@ -1599,7 +1608,10 @@ def holderDeleteCustomer= new XmlHolder(tstepDeleteCustomer)
 def idvalueDeleteCustomer = holderDeleteCustomer.getNodeValue("//*:result")
 log.info "The Customer with Id $idvalueCreateCustomer Has Been Deleted :$idvalueDeleteCustomer"
 
-//def tstepCustomerByIdExec =tc.testSteps['Get Customer By Id'].getPropertyValue('request')
-//def holderCustomerByIdExec= new XmlHolder(tstepCustomerById)
-//holderCustomerByIdExec.setNodeValue("//*:customerId",idvalueCreateCustomer)
-//tc.getTestStepByName("Get Customer By Id")</script></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/></con:soapui-project>
+def tstepCustomerById =tc.testSteps['Get Customer By Id'].getPropertyValue('response')
+def holderCustomerById= new XmlHolder(tstepCustomerById)
+def idvalueCustomerById = holderCustomerById.getNodeValue("//*:id")
+//if(idvalueCreateCustomer==idvalueCustomerById){
+//log.info "The Customer Has Been Added And The Customer Id Is:$idvalueCreateCustomer"
+//}
+assert idvalueCreateCustomer==idvalueCustomerById</script></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/></con:soapui-project>
